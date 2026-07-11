@@ -1,0 +1,14 @@
+# Configurações sensíveis (use config/conexao.example.php como modelo)
+config/conexao.example.php
+config/conexao.example.php
+
+# Logs
+*.log
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Uploads e temporários
+/uploads/temp/
+*.tmp

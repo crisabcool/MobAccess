@@ -1,0 +1,1033 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:'Segoe UI',sans-serif;
+    background:#08121f;
+    color:white;
+}
+
+@media (max-width: 1024px){
+
+    .hero-content h1{
+        font-size: 56px;
+    }
+
+    .hero-content p{
+        font-size: 18px;
+    }
+
+    .stats{
+        gap: 30px;
+    }
+}
+
+@media (max-width: 768px){
+
+    .hero{
+
+        padding-top: 180px;
+        padding-left: 25px;
+        padding-right: 25px;
+
+        text-align: center;
+    }
+
+    .hero-content{
+
+        max-width: 100%;
+    }
+
+    .hero-content h1{
+
+        font-size: 42px;
+    }
+
+    .hero-content p{
+
+        font-size: 16px;
+    }
+
+    .stats{
+
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .stats div{
+
+        min-width: 90px;
+    }
+}
+
+/* HERO */
+
+.hero{
+
+    position:relative;
+
+    min-height:100vh;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 10%;
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        rgba(0,0,0,.65),
+        rgba(0,0,0,.85)
+    ),
+    url('../images/fundo_site.jpg') center/cover;
+}
+
+/* CONTEÚDO */
+
+.hero-content{
+
+    position:relative;
+
+    max-width:550px;
+
+    z-index:10;
+}
+
+.hero-content h1{
+
+    font-size:58px;
+
+    line-height:1.1;
+
+    margin-bottom:20px;
+}
+
+.hero-content p{
+
+    font-size:20px;
+
+    color:#d6d6d6;
+
+    margin-bottom:30px;
+}
+
+/* BOTÕES */
+
+.buttons{
+
+    display:flex;
+    gap:15px;
+}
+
+.btn-primary{
+
+    background:#5b4cff;
+
+    padding:14px 28px;
+
+    border-radius:10px;
+
+    color:white;
+
+    text-decoration:none;
+}
+
+.btn-primary:hover{
+
+    background:#4338ca;
+}
+
+.btn-secondary{
+
+    border:1px solid rgba(255,255,255,.3);
+
+    padding:14px 28px;
+
+    border-radius:10px;
+
+    color:white;
+
+    text-decoration:none;
+}
+
+.btn-secondary:hover{
+
+    background:rgba(255,255,255,.1);
+}
+
+/* ESTATÍSTICAS */
+
+.stats{
+
+    display:flex;
+
+    gap:40px;
+
+    margin-top:40px;
+}
+
+.stats h2{
+
+    color:#6d5cff;
+}
+
+.stats span{
+
+    color:#bbb;
+}
+
+/* ANIMAÇÃO DAS SCOOTERS */
+
+.traffic{
+
+    position:absolute;
+
+    inset:0;
+
+    pointer-events:none;
+}
+
+.scooter{
+
+    position:absolute;
+
+    z-index:3;
+
+    filter:
+    drop-shadow(0 18px 25px rgba(0,0,0,.5))
+    drop-shadow(0 0 12px rgba(91,76,255,.4));
+
+    transition:.4s;
+}
+
+/* CITY */
+
+.city{
+
+    width:130px;
+
+    bottom:80px;
+
+    animation:
+    cityMove 18s linear infinite;
+}
+
+@keyframes cityMove{
+
+    from{
+        left:-200px;
+    }
+
+    to{
+        left:110%;
+    }
+}
+
+/* PRO */
+
+.pro{
+
+    width:150px;
+
+    bottom:180px;
+
+    animation:
+    proMove 22s linear infinite;
+
+    animation-delay:2s;
+}
+
+@keyframes proMove{
+
+    from{
+        right:-220px;
+        transform:scaleX(-1);
+    }
+
+    to{
+        right:110%;
+        transform:scaleX(-1);
+    }
+}
+
+/* MAX */
+
+.max{
+
+    width:170px;
+
+    bottom:300px;
+
+    animation:
+    maxMove 26s linear infinite;
+}
+
+@keyframes maxMove{
+
+    0%{
+        left:-250px;
+        transform:translateY(0);
+    }
+
+    25%{
+        transform:translateY(-12px);
+    }
+
+    50%{
+        transform:translateY(10px);
+    }
+
+    75%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        left:110%;
+        transform:translateY(0);
+    }
+}
+
+/* CARDS */
+
+.scooters{
+
+    background:#0f172a;
+
+    padding:80px 10%;
+
+    text-align:center;
+}
+
+.scooters h2{
+
+    margin-bottom:50px;
+
+    font-size:40px;
+}
+
+.cards{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+}
+
+.card{
+
+    width:300px;
+
+    background:#1e293b;
+
+    padding:25px;
+
+    border-radius:20px;
+
+    transition:.4s;
+
+    border:1px solid rgba(255,255,255,.05);
+}
+
+.card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:
+    0 15px 40px rgba(91,76,255,.3);
+}
+
+.card img{
+
+    width:200px;
+
+    height:200px;
+
+    object-fit:contain;
+}
+
+.card h3{
+
+    margin-top:10px;
+}
+
+.card p{
+
+    margin-top:10px;
+
+    color:#cbd5e1;
+}
+
+.card span{
+
+    display:block;
+
+    margin:15px 0;
+
+    color:#6d5cff;
+
+    font-weight:bold;
+}
+
+.card button{
+
+    border:none;
+
+    padding:12px 20px;
+
+    background:#5b4cff;
+
+    color:white;
+
+    border-radius:10px;
+
+    cursor:pointer;
+}
+
+.card button:hover{
+
+    background:#4338ca;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .hero{
+
+        padding:30px;
+
+        text-align:center;
+    }
+
+    .hero-content h1{
+
+        font-size:38px;
+    }
+
+    .hero-content p{
+
+        font-size:16px;
+    }
+
+    .stats{
+
+        justify-content:center;
+
+        flex-wrap:wrap;
+    }
+
+    .city,
+    .pro,
+    .max{
+
+        width:90px;
+    }
+}
+
+
+.hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    right:-150px;
+    top:-100px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(91,76,255,.35),
+        transparent 70%
+    );
+
+    filter:blur(80px);
+}
+
+/* ==========================
+   VIA DAS SCOOTERS
+========================== */
+
+.hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:0;
+    left:0;
+
+    width:100%;
+    height:180px;
+
+    background:
+    linear-gradient(
+        to top,
+        rgba(0,0,0,.85),
+        transparent
+    );
+
+    z-index:1;
+}
+
+/* ==========================
+   TRAFEGO
+========================== */
+
+.traffic{
+
+    position:absolute;
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:2;
+}
+
+/* ==========================
+   SCOOTERS
+========================== */
+
+.scooter{
+
+    position:absolute;
+
+    filter:
+    drop-shadow(0 20px 20px rgba(0,0,0,.6))
+    drop-shadow(0 0 15px rgba(91,76,255,.4));
+
+    transform-origin:center center;
+}
+
+/* ==========================
+   SOMBRA DINAMICA
+========================== */
+
+.scooter::after{
+    display:none;
+}
+
+.city,
+.pro,
+.max{
+
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+}
+
+/* ==========================
+   FAROL
+========================== */
+
+.city{
+    width:150px;
+    bottom:80px;
+
+    animation:
+    cityMove 20s linear infinite,
+    cityBounce 2s ease-in-out infinite;
+}
+
+.city::before{
+    content:"";
+}
+
+/* ==========================
+   CITY
+========================== */
+
+@keyframes cityMove{
+
+    from{
+        left:-250px;
+    }
+
+    to{
+        left:120%;
+    }
+}
+
+@keyframes cityBounce{
+
+    0%,100%{
+        margin-bottom:0;
+    }
+
+    50%{
+        margin-bottom:8px;
+    }
+}
+
+/* ==========================
+   PRO
+========================== */
+
+.pro{
+
+    width:180px;
+
+    bottom:190px;
+
+    animation:
+    proMove 26s linear infinite,
+    floatPro 3s ease-in-out infinite;
+}
+
+@keyframes proMove{
+
+    from{
+
+        right:-300px;
+
+        transform:
+        scaleX(-1);
+    }
+
+    to{
+
+        right:120%;
+
+        transform:
+        scaleX(-1);
+    }
+}
+
+@keyframes floatPro{
+
+    0%,100%{
+        margin-bottom:0;
+    }
+
+    50%{
+        margin-bottom:10px;
+    }
+}
+
+/* ==========================
+   MAX
+========================== */
+
+.max{
+
+    width:220px;
+
+    bottom:320px;
+
+    opacity:.85;
+
+    animation:
+    maxMove 35s linear infinite,
+    maxFloat 4s ease-in-out infinite;
+}
+
+@keyframes maxMove{
+
+    from{
+        left:-350px;
+    }
+
+    to{
+        left:120%;
+    }
+}
+
+@keyframes maxFloat{
+
+    0%,100%{
+        margin-top:0;
+    }
+
+    50%{
+        margin-top:-15px;
+    }
+}
+
+/* ==========================
+   FAROIS
+========================== */
+
+.city,
+.pro,
+.max{
+
+    filter:
+    drop-shadow(0 25px 25px rgba(0,0,0,.6))
+    drop-shadow(0 0 25px rgba(255,255,255,.15))
+    drop-shadow(0 0 35px rgba(91,76,255,.35));
+}
+
+/* ==========================
+   CARDS PREMIUM
+========================== */
+
+.card{
+
+    background:
+    rgba(30,41,59,.85);
+
+    backdrop-filter:
+    blur(12px);
+
+    overflow:hidden;
+}
+
+.card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-100px;
+    left:-100px;
+
+    width:200px;
+    height:200px;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(91,76,255,.30),
+        transparent
+    );
+
+    transition:.4s;
+}
+
+.card:hover::before{
+
+    transform:scale(1.4);
+}
+
+.card img{
+
+    transition:.4s ease;
+}
+
+.card:hover img{
+
+    transform:
+    scale(1.08)
+    rotate(-2deg);
+}
+
+/* ==========================
+   TITULO
+========================== */
+
+.hero-content h1{
+
+    font-size: 70px;
+
+    line-height: 1.1;
+
+    margin-bottom: 20px;
+
+    background:
+    linear-gradient(
+      90deg,
+      #ffffff,
+      #9e94ff
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.hero-content{
+
+    position: relative;
+    z-index: 10;
+
+    max-width: 700px;
+
+    text-align: center;
+
+    margin: 0 auto;
+}
+
+@keyframes fadeText{
+
+    from{
+
+        opacity:0;
+
+        transform:
+        translateY(25px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+        translateY(0);
+    }
+}
+
+.stats{
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 50px;
+
+    margin-top: 40px;
+}
+
+/* ==========================
+   HEADER
+========================== */
+
+.navbar{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    padding:20px 10%;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    background:rgba(0,0,0,.25);
+
+    backdrop-filter:blur(12px);
+
+    z-index:999;
+}
+
+.logo{
+
+    font-size:30px;
+
+    font-weight:800;
+
+    background:
+    linear-gradient(
+        90deg,
+        #ffffff,
+        #7c6cff,
+        #4f46e5
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.navbar nav{
+
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+
+.nav-link{
+
+    color:white;
+    text-decoration:none;
+}
+
+.nav-link:hover{
+
+    color:#9e94ff;
+}
+
+/* espaço para o menu */
+
+.hero{
+    position: relative;
+
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 120px 5% 60px;
+
+    overflow: hidden;
+
+    background:
+    linear-gradient(
+        rgba(0,0,0,.65),
+        rgba(0,0,0,.85)
+    ),
+    url('../images/fundo_site.jpg') center/cover no-repeat;
+}
+
+/* ==========================
+   FOOTER
+========================== */
+
+.footer{
+
+    background:#07111c;
+
+    padding:60px 10% 25px;
+}
+
+.footer-container{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
+
+    gap:30px;
+}
+
+.footer h3,
+.footer h4{
+
+    margin-bottom:15px;
+
+    color:#9e94ff;
+}
+
+.footer p{
+
+    color:#cbd5e1;
+
+    margin-bottom:10px;
+}
+
+.copyright{
+
+    margin-top:40px;
+
+    padding-top:20px;
+
+    border-top:
+    1px solid rgba(255,255,255,.1);
+
+    text-align:center;
+
+    color:#94a3b8;
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media(max-width:768px){
+
+    .navbar{
+
+        flex-direction:column;
+
+        gap:15px;
+    }
+
+    .navbar nav{
+
+        flex-wrap:wrap;
+
+        justify-content:center;
+    }
+
+    .hero{
+
+        padding-top:160px;
+    }
+}
+
+.btn-primary,
+.btn-secondary{
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.btn-primary:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 10px 25px rgba(91,76,255,.4);
+}
+
+.btn-secondary:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 10px 25px rgba(255,255,255,.15);
+}
+
+/* ==========================
+   REDES SOCIAIS
+========================== */
+
+.social-links{
+
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.social-links a{
+
+    text-decoration:none;
+
+    color:#cbd5e1;
+
+    padding:10px 15px;
+
+    border-radius:10px;
+
+    transition:.3s;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:
+    rgba(255,255,255,.03);
+}
+
+.social-links a:hover{
+
+    color:white;
+
+    background:
+    rgba(91,76,255,.25);
+
+    border-color:
+    rgba(91,76,255,.5);
+
+    transform:
+    translateX(5px);
+
+    box-shadow:
+    0 0 20px rgba(91,76,255,.25);
+
+
+
+
+
+
+
+
