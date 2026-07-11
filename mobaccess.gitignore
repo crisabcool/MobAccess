@@ -1,6 +1,5 @@
-# Configurações sensíveis (use config/conexao.example.php como modelo)
-config/conexao.example.php
-config/conexao.example.php
+config/conexao.php
+config/conexao.php
 
 # Logs
 *.log
