@@ -1,18 +1,16 @@
 <?php
-
 session_start();
-
 if(
 !isset($_SESSION['usuario'])
 ){
     header(
     "Location: login.php"
     );
-
     exit();
 }
-
 include("../config/conexao.php");
+
+$reserva_id = $_POST['reserva_id'];
 
 $conn->query("
 UPDATE scooters 
@@ -23,9 +21,8 @@ WHERE id = (SELECT scooter_id FROM reservas WHERE id = $reserva_id)
 $sql = "UPDATE reservas 
         SET data_entrega = NOW() 
         WHERE id = ?";
-
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $_POST['reserva_id']);
+$stmt->bind_param("i", $reserva_id);
 $stmt->execute();
 
 header("Location: ../admin.php");

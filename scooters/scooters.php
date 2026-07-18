@@ -1,16 +1,14 @@
 <?php
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$conn = new mysqli("localhost", "root", "", "mobaccess");
+include("config/conexao.php");
 
-$result = $conn->query("SELECT * FROM scooters WHERE status='disponivel'");
+header("Content-Type: application/json");
 
+$result = $conn->query("SELECT * FROM scooters WHERE disponivel = 1");
 $scooters = [];
-
 while ($row = $result->fetch_assoc()) {
   $scooters[] = $row;
 }
-
 echo json_encode($scooters);
