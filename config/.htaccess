@@ -1,0 +1,3 @@
+<FilesMatch "\.(py|joblib|sql)$">
+    Require all denied
+</FilesMatch>

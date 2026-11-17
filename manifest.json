@@ -1,0 +1,16 @@
+{
+  "name": "MobAccess",
+  "short_name": "MobAccess",
+  "description": "Mobilidade inteligente para todos — alugue scooters facilmente.",
+  "start_url": "/login.php",
+  "display": "standalone",
+  "background_color": "#0a1030",
+  "theme_color": "#6450ff",
+  "icons": [
+    {
+      "src": "images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

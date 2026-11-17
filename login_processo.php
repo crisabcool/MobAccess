@@ -31,6 +31,14 @@ if (!password_verify($senha, $usuario['senha'])) {
 }
 
 // 4. Login OK
+session_regenerate_id(true);
 $_SESSION['usuario'] = $usuario['nome'];
-header("Location: dashboard.php");
+$_SESSION['usuario_id'] = (int) $usuario['id'];
+
+// Administrador vai para o painel; os demais, para o app
+if (($usuario['perfil'] ?? '') === 'admin') {
+    header("Location: painel_admin.php");
+} else {
+    header("Location: dashboard.php");
+}
 exit();

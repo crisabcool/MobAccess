@@ -9,6 +9,7 @@ if (!isset($_SESSION['reserva_pendente'])) {
     exit();
 }
 include("config/conexao.php");
+include("config/analytics.php");
 
 $r = $_SESSION['reserva_pendente'];
 $metodo = $_POST['metodo'] ?? 'debito';
@@ -24,19 +25,22 @@ if ($stmt->get_result()->num_rows > 0) {
 }
 
 $sql = "INSERT INTO reservas 
-        (scooter_id, usuario, data_reserva, data_entrega, horas, valor_total, status_pagamento, metodo_pagamento, liberada) 
-        VALUES (?, ?, NOW(), NULL, ?, ?, 'aprovado', ?, 0)";
+        (scooter_id, usuario, usuario_id, data_reserva, data_entrega, horas, valor_total, status_pagamento, metodo_pagamento, liberada) 
+        VALUES (?, ?, ?, NOW(), NULL, ?, ?, 'aprovado', ?, 0)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param(
-    "isids",
+    "isiids",
     $r['scooter_id'],
     $_SESSION['usuario'],
+    $_SESSION['usuario_id'],
     $r['horas'],
     $r['valor_total'],
     $metodo
 );
 $stmt->execute();
 $reserva_id = $stmt->insert_id;
+
+registrar_fluxo($conn, (int) $r['scooter_id'], 'reservas_iniciadas');
 
 $conn->query("UPDATE scooters SET disponivel = 0 WHERE id = " . (int)$r['scooter_id']);
 

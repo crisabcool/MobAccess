@@ -2,17 +2,30 @@
 session_start();
 include("config/conexao.php");
 
-if (!isset($_SESSION['usuario'])) {
+// sessões antigas (sem usuario_id) precisam logar de novo
+if (!isset($_SESSION['usuario']) || !isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit();
 }
+$uid = (int) $_SESSION['usuario_id'];
 
-$scooters = $conn->query("
-    SELECT s.*, 
-    (SELECT COUNT(*) FROM reservas r 
-     WHERE r.scooter_id = s.id AND r.data_entrega IS NULL) AS ocupada
-    FROM scooters s
-");
+// consentimento de localização (null = ainda não perguntado)
+$stmt = $conn->prepare("SELECT consentimento_geo FROM usuarios WHERE id = ?");
+$stmt->bind_param("i", $uid);
+$stmt->execute();
+$u = $stmt->get_result()->fetch_assoc();
+$consentimento = $u ? $u['consentimento_geo'] : null;
+
+// existe corrida ativa (scooter liberada e ainda não devolvida)?
+$stmt = $conn->prepare("SELECT COUNT(*) AS n FROM reservas
+                        WHERE usuario_id = ? AND liberada = 1 AND data_entrega IS NULL");
+$stmt->bind_param("i", $uid);
+$stmt->execute();
+$corridaAtiva = ((int) $stmt->get_result()->fetch_assoc()['n']) > 0;
+
+// scooters cadastradas
+$result = $conn->query("SELECT * FROM scooters ORDER BY id");
+$scooters = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

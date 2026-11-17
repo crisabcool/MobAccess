@@ -1,14 +1,33 @@
 <?php
 session_start();
 include("config/conexao.php");
-if (!isset($_SESSION['usuario'])) {
+
+// sessões antigas (sem usuario_id) precisam logar de novo
+if (!isset($_SESSION['usuario']) || !isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit();
 }
-// Busca as scooters cadastradas no banco
+$uid = (int) $_SESSION['usuario_id'];
+
+// consentimento de localização (null = ainda não perguntado)
+$stmt = $conn->prepare("SELECT consentimento_geo FROM usuarios WHERE id = ?");
+$stmt->bind_param("i", $uid);
+$stmt->execute();
+$u = $stmt->get_result()->fetch_assoc();
+$consentimento = $u ? $u['consentimento_geo'] : null;
+
+// existe corrida ativa (scooter liberada e ainda não devolvida)?
+$stmt = $conn->prepare("SELECT COUNT(*) AS n FROM reservas
+                        WHERE usuario_id = ? AND liberada = 1 AND data_entrega IS NULL");
+$stmt->bind_param("i", $uid);
+$stmt->execute();
+$corridaAtiva = ((int) $stmt->get_result()->fetch_assoc()['n']) > 0;
+
+// scooters cadastradas
 $result = $conn->query("SELECT * FROM scooters ORDER BY id");
 $scooters = $result->fetch_all(MYSQLI_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -28,6 +47,18 @@ body{
     min-height: 100vh;
     color: #e8e8f0;
 }
+
+.banner-privacidade{
+    background: rgba(100,80,255,.15);
+    border: 1px solid rgba(155,140,255,.4);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    color: #e8e8f0;
+}
+.banner-privacidade p{ margin: 0 0 12px; font-size: 15px; line-height: 1.5; }
+.banner-botoes{ display: flex; gap: 10px; flex-wrap: wrap; }
+.banner-botoes .btn{ min-height: 44px; }
 .topbar{
     display:flex;
     justify-content:space-between;
@@ -190,6 +221,21 @@ body{
     </div>
 </div>
 
+<?php if ($consentimento === null): ?>
+<div id="bannerPrivacidade" class="banner-privacidade" role="region" aria-label="Privacidade e localização">
+    <p>
+        Para melhorar a segurança e o planejamento da frota, o MobAccess pode registrar a sua
+        localização <strong>apenas enquanto você estiver usando uma scooter</strong>.
+        Você pode mudar essa escolha quando quiser.
+    </p>
+    <div class="banner-botoes">
+        <button type="button" class="btn btn-primary" onclick="confirmarPermissao(event)">Permitir</button>
+        <button type="button" class="btn btn-mob-secondary" onclick="responderConsentimento(false)">Agora não</button>
+
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- MAPA -->
 <div id="map"></div>
 
@@ -342,6 +388,115 @@ function atualizarValor() {
     document.getElementById('modalValor').innerText =
         'R$ ' + total.toFixed(2).replace('.', ',');
 }
+
+// ---- Coleta de localização durante a corrida (com consentimento) ----
+var CORRIDA_ATIVA = <?= $corridaAtiva ? 'true' : 'false' ?>;
+var CONSENTIMENTO = <?= $consentimento === null ? 'null' : (int) $consentimento ?>;
+var watchId = null;
+var ultimoEnvio = 0;
+
+function responderConsentimento(aceite) {
+    fetch('API/consentimento_geo.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({aceite: aceite})
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        if (d.ok) {
+            var banner = document.getElementById('bannerPrivacidade');
+            if (banner) banner.remove();
+            CONSENTIMENTO = aceite ? 1 : 0;
+            iniciarRastreioSeNecessario();
+        }
+    });
+}
+
+function pararRastreio() {
+    if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+    }
+}
+
+function iniciarRastreioSeNecessario() {
+    if (!CORRIDA_ATIVA || CONSENTIMENTO !== 1 || !navigator.geolocation || watchId !== null) return;
+
+    watchId = navigator.geolocation.watchPosition(function(pos) {
+        var agora = Date.now();
+        if (agora - ultimoEnvio < 15000) return;   // envia no máximo a cada 15 s
+        ultimoEnvio = agora;
+
+        fetch('API/log_geolocalizacao.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+                precisao: pos.coords.accuracy
+            })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (d.ok === false && d.motivo === 'sem_corrida') pararRastreio();
+        })
+        .catch(function() {});
+    }, function() {}, { enableHighAccuracy: true, maximumAge: 10000, timeout: 20000 });
+
+            document.addEventListener("DOMContentLoaded", function() {
+        // Procura por qualquer botão ou elemento na página que contenha o texto "Permitir"
+        const elementos = document.querySelectorAll("button, a, .btn-permitir");
+        
+        elementos.forEach(function(el) {
+            if (el.textContent.trim() === "Permitir") {
+                el.addEventListener("click", function(e) {
+                    // Exibe o pop-up com a mensagem pedida
+                    alert("Permissão concedida!");
+
+                    // Envia a confirmação para a API em segundo plano
+                    fetch('API/consentimento_geo.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ consentimento: 1 })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.ok) {
+                            // Oculta o banner de consentimento
+                            const banner = el.closest('.card-consentimento') || el.parentElement;
+                            if (banner) {
+                                banner.style.display = 'none';
+                            }
+                            location.reload();
+                        }
+                    })
+                    .catch(error => console.error("Erro ao gravar consentimento:", error));
+                });
+            }
+        });
+    });
+}
+function confirmarPermissao(event) {
+    // 1. Dispara o pop-up com a mensagem pedida
+    alert("Permissão concedida!");
+
+    // 2. Envia a confirmação para a API no backend
+    fetch('API/consentimento_geo.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ consentimento: 1 })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Recarrega a página após guardar para atualizar o estado do painel
+        location.reload();
+    })
+    .catch(error => {
+        console.error("Erro ao gravar consentimento:", error);
+    });
+}
+
+iniciarRastreioSeNecessario();
 </script>
 </body>
 </html>
